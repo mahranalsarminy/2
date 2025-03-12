@@ -12,6 +12,24 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
  */
+ // Add these routes to your existing admin routes
+Route::prefix('categories')->name('categories.')->group(function () {
+    Route::get('/', [App\Http\Controllers\Admin\CategoryController::class, 'index'])->name('index');
+    Route::post('/', [App\Http\Controllers\Admin\CategoryController::class, 'store'])->name('store');
+    Route::put('/{id}', [App\Http\Controllers\Admin\CategoryController::class, 'update'])->name('update');
+    Route::delete('/{id}', [App\Http\Controllers\Admin\CategoryController::class, 'destroy'])->name('destroy');
+});
+
+// The following routes should be added to manage wallpapers in the admin panel
+Route::prefix('wallpapers')->name('wallpapers.')->group(function () {
+    Route::get('/', [App\Http\Controllers\Admin\WallpaperController::class, 'index'])->name('index');
+    Route::get('/create', [App\Http\Controllers\Admin\WallpaperController::class, 'create'])->name('create');
+    Route::post('/', [App\Http\Controllers\Admin\WallpaperController::class, 'store'])->name('store');
+    Route::get('/{id}/edit', [App\Http\Controllers\Admin\WallpaperController::class, 'edit'])->name('edit');
+    Route::put('/{id}', [App\Http\Controllers\Admin\WallpaperController::class, 'update'])->name('update');
+    Route::delete('/{id}', [App\Http\Controllers\Admin\WallpaperController::class, 'destroy'])->name('destroy');
+});
+ 
 Route::group(['middleware' => 'notInstalled', 'prefix' => adminPath(), 'namespace' => 'Admin'], function () {
     Route::name('admin.')->namespace('Auth')->group(function () {
         Route::get('/', 'LoginController@redirectToLogin')->name('index');

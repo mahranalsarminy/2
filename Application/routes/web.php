@@ -12,7 +12,22 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
  */
-
+Route::middleware(['oauth.complete', 'verified', '2fa.verify'])->group(function () {
+    // Change homepage to wallpaper homepage
+    Route::get('/', 'WallpaperController@index')->name('home');
+    
+    // Add wallpaper routes
+    Route::name('wallpapers.')->prefix('wallpapers')->group(function () {
+        Route::get('/', 'WallpaperController@index')->name('index');
+        Route::get('/category/{slug}', 'WallpaperController@category')->name('category');
+        Route::get('/tag/{tag}', 'WallpaperController@tag')->name('tag');
+        Route::get('/resolution/{resolution}', 'WallpaperController@resolution')->name('resolution');
+        Route::get('/color/{color}', 'WallpaperController@color')->name('color');
+        Route::get('/search', 'WallpaperController@search')->name('search');
+        Route::get('{id}/view', 'WallpaperController@show')->name('show');
+        Route::get('download/{id}/{name}', 'WallpaperController@download')->name('download');
+    });
+	
 Route::get('cronjob', 'CronJobController@run')->name('cronjob')->middleware('demo:GET');
 Route::view('maintenance', 'maintenance')->name('maintenance');
 Route::group(localizeOptions(), function () {
